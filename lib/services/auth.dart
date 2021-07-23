@@ -12,7 +12,6 @@ class AWSAuthRepository {
       final awsUser = await Amplify.Auth.getCurrentUser();
       return awsUser.userId;
     } catch (e) {
-      print("not signed in");
       return "";
     }
   }

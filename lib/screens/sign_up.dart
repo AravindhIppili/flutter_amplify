@@ -32,45 +32,81 @@ class _SignUpState extends State<SignUp> {
         ? Loading()
         : Scaffold(
             body: SafeArea(
-            child: Container(
-              padding: EdgeInsets.all(20),
-              child: Stack(
-                children: [
-                  Column(children: [
-                    Container(
-                      child: Text(
-                        "Create an Account",
-                        style: TextStyle(fontSize: 30),
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(), hintText: "Username"),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: TextFormField(
-                        controller: emailCont,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: "Email Address"),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: TextField(
-                        obscureText: true,
-                        controller: passCont,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: "Password",
+                      Container(
+                        child: Text(
+                          "Create an Account",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    TextButton(
+                      SizedBox(
+                        height: 60,
+                      ),
+                      Container(
+                        // padding: EdgeInsets.symmetric(vertical: 20),
+                        child: TextField(
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                              fillColor: Colors.grey[850],
+                              filled: true,
+                              focusColor: Colors.black26,
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: OutlineInputBorder(),
+                              hintText: "Username"),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        // padding: EdgeInsets.symmetric(vertical: 20),
+
+                        child: TextFormField(
+                          controller: emailCont,
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                              fillColor: Colors.grey[850],
+                              filled: true,
+                              focusColor: Colors.black26,
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: OutlineInputBorder(),
+                              hintText: "Email Address"),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        // padding: EdgeInsets.symmetric(vertical: 20),
+                        child: TextField(
+                          obscureText: true,
+                          controller: passCont,
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            fillColor: Colors.grey[850],
+                            filled: true,
+                            focusColor: Colors.black26,
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(),
+                            hintText: "Password",
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      TextButton(
                         onPressed: () async {
                           setState(() {
                             _isLoading = true;
@@ -86,74 +122,107 @@ class _SignUpState extends State<SignUp> {
                           });
                         },
                         child: Container(
-                            padding: EdgeInsets.all(10),
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Create Account",
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: kDefFontSize),
-                            )),
+                          padding: EdgeInsets.all(10),
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Create Account",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.amber),
-                        )),
-                    Visibility(
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Visibility(
                         visible: _isSignedUp,
-                        child: Column(children: [
-                          TextFormField(
+                        child: Column(
+                          children: [
+                            TextFormField(
                               controller: confirmController,
+                              style: TextStyle(color: Colors.white),
                               decoration: const InputDecoration(
+                                fillColor: Colors.black38,
+                                filled: true,
+                                focusColor: Colors.black26,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.amber, width: 2.0),
+                                ),
+                                hintStyle: TextStyle(color: Colors.grey),
                                 hintText: 'The code we sent you',
-                              )),
-                          ElevatedButton(
-                            onPressed: () async {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              final authAWSRepo =
-                                  context.read(authAWSRepositoryProvider);
-                              await authAWSRepo.confirmSignUp(
-                                  emailCont.text.trim(),
-                                  confirmController.text.trim());
-                              context.refresh(authUserProvider);
-                              await authAWSRepo.signIn(
-                                  emailCont.text.trim(), passCont.text.trim());
-                              setState(() {
-                                _isLoading = false;
-                              });
-                            },
-                            child: const Text('Confirm Sign Up'),
-                          ),
-                        ])),
-                  ]),
-                  Positioned(
-                      bottom: 0,
-                      child: Container(
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                final authAWSRepo =
+                                    context.read(authAWSRepositoryProvider);
+                                await authAWSRepo.confirmSignUp(
+                                    emailCont.text.trim(),
+                                    confirmController.text.trim());
+                                context.refresh(authUserProvider);
+                                await authAWSRepo.signIn(emailCont.text.trim(),
+                                    passCont.text.trim());
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              },
+                              child: const Text(
+                                'Confirm Sign Up',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 60,
+                      ),
+                      Container(
                         alignment: Alignment.center,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               "Already have account? ",
-                              style: TextStyle(fontSize: kDefFontSize),
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.white),
                             ),
                             TextButton(
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomePage()));
-                                },
-                                child: Text("Sign in",
-                                    style: TextStyle(
-                                        fontSize: kDefFontSize,
-                                        color: kDefaultcolor)))
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomePage()));
+                              },
+                              child: Text(
+                                "Sign in",
+                                style: TextStyle(
+                                    fontSize: 15, color: kDefaultcolor),
+                              ),
+                            ),
                           ],
                         ),
-                      ))
-                ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ));
+          );
   }
 }

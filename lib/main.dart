@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
         title: 'AWS',
         theme: ThemeData(
           primarySwatch: Colors.amber,
+          scaffoldBackgroundColor: Colors.black45,
         ),
         home: _amplifyConfigured
             ? Consumer(builder: (context, watch, child) {
