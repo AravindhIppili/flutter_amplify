@@ -7,7 +7,7 @@ class Storage {
     try {
       final fileName = DateTime.now().toIso8601String();
       final result =
-          await Amplify.Storage.uploadFile(local: file, key: fileName + ".jpg");
+          await Amplify.Storage.uploadFile(local: file, key: fileName + ".mp4");
       return result.key;
     } catch (e) {
       throw e;

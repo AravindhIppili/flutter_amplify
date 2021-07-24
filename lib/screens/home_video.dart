@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:aws_auth/const.dart';
 import 'package:aws_auth/provider.dart';
 import 'package:aws_auth/screens/components/loading.dart';
-import 'package:aws_auth/screens/view_images.dart';
+import 'package:aws_auth/screens/view_videos.dart';
 import 'package:aws_auth/services/auth.dart';
 import 'package:aws_auth/services/upload_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:video_player/video_player.dart';
 
 class HomeVideo extends StatefulWidget {
   const HomeVideo({Key? key}) : super(key: key);
@@ -20,7 +21,8 @@ class HomeVideo extends StatefulWidget {
 
 class _HomeVideoState extends State<HomeVideo> {
   bool _isLoading = false;
-  XFile? image;
+  XFile? video;
+  VideoPlayerController? videoPlayerController;
   @override
   Widget build(BuildContext context) {
     return _isLoading
@@ -71,14 +73,23 @@ class _HomeVideoState extends State<HomeVideo> {
                       ),
                     ),
                     SizedBox(height: 30),
-                    if (image != null)
-                      Container(
-                        padding: EdgeInsets.all(3),
-                        color: Colors.amber,
-                        child: Image.file(
-                          File(image!.path),
+                    if (video != null)
+                      if (videoPlayerController!.value.isInitialized)
+                        GestureDetector(
+                          onTap: (){
+                            videoPlayerController!.value.isPlaying ?
+                            videoPlayerController!.pause()
+                            : videoPlayerController!.play();
+                          },
+                          child: AspectRatio(
+                            aspectRatio: videoPlayerController!.value.aspectRatio,
+                            child: Container(
+                              padding: EdgeInsets.all(3),
+                              color: Colors.amber,
+                              child: VideoPlayer(videoPlayerController!),
+                            ),
+                          ),
                         ),
-                      ),
                     SizedBox(height: 10),
                     Row(
                       children: [
@@ -87,20 +98,22 @@ class _HomeVideoState extends State<HomeVideo> {
                             child: TextButton(
                               onPressed: () async {
                                 final ImagePicker _picker = ImagePicker();
-                                final XFile? img = await _picker.pickImage(
+                                final XFile? vid = await _picker.pickVideo(
                                     source: ImageSource.gallery,
-                                    imageQuality: 100,
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height / 2);
-                                setState(() {
-                                  image = img;
-                                });
+                                    maxDuration: Duration(minutes: 2));
+                                video = vid;
+                                videoPlayerController = VideoPlayerController
+                                    .file(File(video!.path))
+                                  ..initialize().then((value) {
+                                    setState(() {});
+                                    
+                                  });
                               },
                               child: Container(
                                 padding: EdgeInsets.all(5),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "Select Image",
+                                  "Select Video",
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: kDefFontSize),
@@ -120,13 +133,13 @@ class _HomeVideoState extends State<HomeVideo> {
                           child: Container(
                             child: TextButton(
                               onPressed: () async {
-                                if (image != null) {
+                                if (video != null) {
                                   setState(() {
                                     _isLoading = true;
                                   });
-                                  await Storage().uploadFile(File(image!.path));
+                                  await Storage().uploadFile(File(video!.path));
                                   setState(() {
-                                    image = null;
+                                    video = null;
                                     _isLoading = false;
                                   });
                                 }
@@ -135,7 +148,7 @@ class _HomeVideoState extends State<HomeVideo> {
                                 padding: EdgeInsets.all(5),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "Upload Image",
+                                  "Upload Video",
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: kDefFontSize),
@@ -159,7 +172,7 @@ class _HomeVideoState extends State<HomeVideo> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ViewImages(),
+                              builder: (context) => ViewVideos(),
                             ),
                           );
                         },
