@@ -14,11 +14,11 @@ class CustomVideoPlayer extends StatelessWidget {
           videoPlayerController!.value.isPlaying
               ? videoPlayerController!.pause()
               : videoPlayerController!.play();
-              
         },
         child: AspectRatio(
           aspectRatio: videoPlayerController!.value.aspectRatio,
           child: Container(
+            constraints:BoxConstraints(minHeight: MediaQuery.of(context).size.height/2),
             padding: EdgeInsets.all(3),
             color: Colors.amber,
             child: VideoPlayer(videoPlayerController!),

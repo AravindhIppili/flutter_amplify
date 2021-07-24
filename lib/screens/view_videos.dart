@@ -51,12 +51,14 @@ class _ViewVideosState extends State<ViewVideos> {
                 child: ListView.builder(
                     itemCount: videosList.length,
                     itemBuilder: (context, i) {
-                      return 
-                      CustomVideoPlayer(
-                        videoPlayerController: VideoPlayerController.network(
-                          videosList[i].url,
-                          )..initialize()
-                        );
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: CustomVideoPlayer(
+                          videoPlayerController: VideoPlayerController.network(
+                            videosList[i].url,
+                            )..initialize()
+                          ),
+                      );
                           // Image.network(
                           //   videosList[i].url,
                           //   loadingBuilder: (context, child, loadingProgress) {
