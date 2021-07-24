@@ -5,6 +5,7 @@ import 'package:aws_auth/provider.dart';
 import 'package:aws_auth/screens/components/loading.dart';
 import 'package:aws_auth/screens/view_images.dart';
 import 'package:aws_auth/services/auth.dart';
+import 'package:aws_auth/services/upload_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -69,7 +70,7 @@ class _HomeVideoState extends State<HomeVideo> {
                         ),
                       ),
                     ),
-                    SizedBox(height:30),
+                    SizedBox(height: 30),
                     if (image != null)
                       Container(
                         padding: EdgeInsets.all(3),
@@ -78,34 +79,76 @@ class _HomeVideoState extends State<HomeVideo> {
                           File(image!.path),
                         ),
                       ),
-                    SizedBox(height:10),
-                    Container(
-                      child: TextButton(
-                        onPressed: () async {
-                          final ImagePicker _picker = ImagePicker();
-                          final XFile? img = await _picker.pickImage(
-                              source: ImageSource.gallery,
-                              maxHeight:
-                                  MediaQuery.of(context).size.height / 2);
-                          setState(() {
-                            image = img;
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(5),
-                          width: double.infinity,
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Select Image",
-                            style: TextStyle(
-                                color: Colors.black, fontSize: kDefFontSize),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            child: TextButton(
+                              onPressed: () async {
+                                final ImagePicker _picker = ImagePicker();
+                                final XFile? img = await _picker.pickImage(
+                                    source: ImageSource.gallery,
+                                    imageQuality: 100,
+                                    maxHeight:
+                                        MediaQuery.of(context).size.height / 2);
+                                setState(() {
+                                  image = img;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(5),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Select Image",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: kDefFontSize),
+                                ),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.amber),
+                              ),
+                            ),
                           ),
                         ),
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.amber),
+                        SizedBox(
+                          width: 10,
                         ),
-                      ),
+                        Expanded(
+                          child: Container(
+                            child: TextButton(
+                              onPressed: () async {
+                                if (image != null) {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  await Storage().uploadFile(File(image!.path));
+                                  setState(() {
+                                    image = null;
+                                    _isLoading = false;
+                                  });
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(5),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Upload Image",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: kDefFontSize),
+                                ),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.amber),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 30,
