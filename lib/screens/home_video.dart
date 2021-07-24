@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class HomeVideo extends StatefulWidget {
   const HomeVideo({Key? key}) : super(key: key);
@@ -75,19 +76,30 @@ class _HomeVideoState extends State<HomeVideo> {
                     SizedBox(height: 30),
                     if (video != null)
                       if (videoPlayerController!.value.isInitialized)
-                        GestureDetector(
-                          onTap: (){
-                            videoPlayerController!.value.isPlaying ?
-                            videoPlayerController!.pause()
-                            : videoPlayerController!.play();
+                        VisibilityDetector(
+                          key: Key("home_image"),
+                          onVisibilityChanged: (VisibilityInfo info) {
+                            if (info.visibleFraction == 0) {
+                              videoPlayerController!.pause();
+                            }
                           },
-                          child: AspectRatio(
-                            aspectRatio: videoPlayerController!.value.aspectRatio,
-                            child: Container(
-                              constraints:BoxConstraints(minHeight: MediaQuery.of(context).size.height/2),
-                              padding: EdgeInsets.all(3),
-                              color: Colors.amber,
-                              child: VideoPlayer(videoPlayerController!),
+                          child: GestureDetector(
+                            onTap: () {
+                              videoPlayerController!.value.isPlaying
+                                  ? videoPlayerController!.pause()
+                                  : videoPlayerController!.play();
+                            },
+                            child: AspectRatio(
+                              aspectRatio:
+                                  videoPlayerController!.value.aspectRatio,
+                              child: Container(
+                                constraints: BoxConstraints(
+                                    minHeight:
+                                        MediaQuery.of(context).size.height / 2),
+                                padding: EdgeInsets.all(3),
+                                color: Colors.amber,
+                                child: VideoPlayer(videoPlayerController!),
+                              ),
                             ),
                           ),
                         ),
@@ -107,7 +119,6 @@ class _HomeVideoState extends State<HomeVideo> {
                                     .file(File(video!.path))
                                   ..initialize().then((value) {
                                     setState(() {});
-                                    
                                   });
                               },
                               child: Container(
@@ -182,7 +193,7 @@ class _HomeVideoState extends State<HomeVideo> {
                           width: double.infinity,
                           alignment: Alignment.center,
                           child: Text(
-                            "View Images",
+                            "View Videos",
                             style: TextStyle(
                                 color: Colors.black, fontSize: kDefFontSize),
                           ),

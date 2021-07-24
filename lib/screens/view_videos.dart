@@ -43,22 +43,28 @@ class _ViewVideosState extends State<ViewVideos> {
     return Scaffold(
       body: isLoading
           ? Loading()
-          : videosList.isEmpty?
-          Center(child: Text("No Images found",style: TextStyle(color: Colors.red,fontSize: 30),),)
-          : Container(
-              padding: EdgeInsets.all(20),
-              child: SafeArea(
-                child: ListView.builder(
-                    itemCount: videosList.length,
-                    itemBuilder: (context, i) {
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: CustomVideoPlayer(
-                          videoPlayerController: VideoPlayerController.network(
-                            videosList[i].url,
-                            )..initialize()
-                          ),
-                      );
+          : videosList.isEmpty
+              ? Center(
+                  child: Text(
+                    "No Images found",
+                    style: TextStyle(color: Colors.red, fontSize: 30),
+                  ),
+                )
+              : Container(
+                  padding: EdgeInsets.all(20),
+                  child: SafeArea(
+                    child: ListView.builder(
+                        itemCount: videosList.length,
+                        itemBuilder: (context, i) {
+                          return Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: CustomVideoPlayer(
+                                viskey: "key+$i",
+                                videoPlayerController:
+                                    VideoPlayerController.network(
+                                  videosList[i].url,
+                                )..initialize()),
+                          );
                           // Image.network(
                           //   videosList[i].url,
                           //   loadingBuilder: (context, child, loadingProgress) {
@@ -68,9 +74,9 @@ class _ViewVideosState extends State<ViewVideos> {
                           //     );
                           //   },
                           // ));
-                    }),
-              ),
-            ),
+                        }),
+                  ),
+                ),
     );
   }
 }
