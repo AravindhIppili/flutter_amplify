@@ -6,12 +6,12 @@ import 'package:aws_auth/screens/components/loading.dart';
 import 'package:aws_auth/screens/view_videos.dart';
 import 'package:aws_auth/services/auth.dart';
 import 'package:aws_auth/services/upload_file.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class HomeVideo extends StatefulWidget {
   const HomeVideo({Key? key}) : super(key: key);
@@ -24,6 +24,8 @@ class _HomeVideoState extends State<HomeVideo> {
   bool _isLoading = false;
   XFile? video;
   VideoPlayerController? videoPlayerController;
+  late FlickManager flickManager;
+
   @override
   Widget build(BuildContext context) {
     return _isLoading
@@ -76,30 +78,17 @@ class _HomeVideoState extends State<HomeVideo> {
                     SizedBox(height: 30),
                     if (video != null)
                       if (videoPlayerController!.value.isInitialized)
-                        VisibilityDetector(
-                          key: Key("home_image"),
-                          onVisibilityChanged: (VisibilityInfo info) {
-                            if (info.visibleFraction == 0) {
-                              videoPlayerController!.pause();
-                            }
-                          },
-                          child: GestureDetector(
-                            onTap: () {
-                              videoPlayerController!.value.isPlaying
-                                  ? videoPlayerController!.pause()
-                                  : videoPlayerController!.play();
-                            },
-                            child: AspectRatio(
-                              aspectRatio:
-                                  videoPlayerController!.value.aspectRatio,
-                              child: Container(
-                                constraints: BoxConstraints(
-                                    minHeight:
-                                        MediaQuery.of(context).size.height / 2),
-                                padding: EdgeInsets.all(3),
-                                color: Colors.amber,
-                                child: VideoPlayer(videoPlayerController!),
-                              ),
+                        AspectRatio(
+                          aspectRatio:
+                              videoPlayerController!.value.aspectRatio,
+                          child: Container(
+                            constraints: BoxConstraints(
+                                minHeight:
+                                    MediaQuery.of(context).size.height / 2),
+                            padding: EdgeInsets.all(3),
+                            color: Colors.amber,
+                            child: FlickVideoPlayer(
+                              flickManager: flickManager,
                             ),
                           ),
                         ),
@@ -118,6 +107,7 @@ class _HomeVideoState extends State<HomeVideo> {
                                 videoPlayerController = VideoPlayerController
                                     .file(File(video!.path))
                                   ..initialize().then((value) {
+                                    flickManager = FlickManager(videoPlayerController: videoPlayerController!);
                                     setState(() {});
                                   });
                               },

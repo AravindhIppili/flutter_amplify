@@ -59,11 +59,10 @@ class _ViewVideosState extends State<ViewVideos> {
                           return Container(
                             margin: EdgeInsets.only(bottom: 10),
                             child: CustomVideoPlayer(
-                                viskey: "key+$i",
                                 videoPlayerController:
                                     VideoPlayerController.network(
                                   videosList[i].url,
-                                )..initialize()),
+                                )),
                           );
                           // Image.network(
                           //   videosList[i].url,

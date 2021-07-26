@@ -2,6 +2,7 @@ import 'package:aws_auth/const.dart';
 import 'package:aws_auth/provider.dart';
 import 'package:aws_auth/screens/components/loading.dart';
 import 'package:aws_auth/screens/sign_up.dart';
+import 'package:aws_auth/screens/view_videos.dart';
 import 'package:aws_auth/services/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -174,6 +175,32 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
+                        Container(
+                      child: TextButton(
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewVideos(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          child: Text(
+                            "View Videos",
+                            style: TextStyle(
+                                color: Colors.black, fontSize: kDefFontSize),
+                          ),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.amber),
+                        ),
+                      ),
+                    ),
                       ]),
                 ),
               ),
